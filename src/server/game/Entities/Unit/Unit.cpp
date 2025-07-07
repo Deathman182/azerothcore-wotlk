@@ -16110,12 +16110,19 @@ void Unit::ProcDamageAndSpellFor(bool isVictim, Unit* target, uint32 procFlag, u
     // Player is loaded now - do not allow passive spell casts to proc
     if (IsPlayer() && ToPlayer()->GetSession()->PlayerLoading())
         return;
-    // For melee/ranged based attack need update skills and set some Aura states if victim present
-    if (procFlag & MELEE_BASED_TRIGGER_MASK && target && procPhase == PROC_SPELL_PHASE_HIT)
-    {
-        // Xinef: Shaman in ghost wolf form cant proc anything melee based
-        if (!isVictim && GetShapeshiftForm() == FORM_GHOSTWOLF)
-            return;
+   / For melee/ranged based attack need update skills and set some Aura states if victim present
+     if (procFlag & MELEE_BASED_TRIGGER_MASK && target && procPhase == PROC_SPELL_PHASE_HIT)
+     {
++        // Allow Feral Druids (Cat/Bear) to trigger weapon-based procs
++        if (!isVictim && IsPlayer() && ToPlayer()->getClass() == CLASS_DRUID &&
++            (GetShapeshiftForm() == FORM_CAT || GetShapeshiftForm() == FORM_BEAR || GetShapeshiftForm() == FORM_DIREBEAR))
++        {
++            ProcDamageAndSpell(target, PROC_FLAG_DONE_MELEE_AUTO_ATTACK, attType, damage, BASE_ATTACK, 0);
++        }
++    {
+         // Xinef: Shaman in ghost wolf form cant proc anything melee based
+         if (!isVictim && GetShapeshiftForm() == FORM_GHOSTWOLF)
+             return;
 
         // Update skills here for players
         // only when you are not fighting other players or their pets/totems (pvp)
