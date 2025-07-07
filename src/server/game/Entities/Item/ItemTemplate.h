@@ -748,7 +748,7 @@ struct ItemTemplate
         // 0x02A5F3 - is mask for Melee weapon from ItemSubClassMask.dbc
         if (Class == ITEM_CLASS_WEAPON && (1 << InventoryType) & feralApEnabledInventoryTypeMaks)
         {
-            int32 bonus = int32((extraDPS + getDPS()) * 14.0f) - 767;
+            int32 bonus = int32((extraDPS + getDPS()) * 14.0f) - 504;
             if (bonus < 0)
                 return 0;
             return bonus;
